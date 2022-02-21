@@ -1,25 +1,64 @@
-import logo from './logo.svg';
+import React, {Component, useState, useEffect} from 'react';
+import { 
+  BrowserRouter as Router,
+  Route,
+} from 'react-router-dom';
+import HomePage  from './pages/HomePage';
+import { ToDoList } from './pages/ToDoList';
+import { NewTodoForm } from './pages/NewTodoForm';
+import { ToDoListItem } from './pages/ToDoListItem';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+let fakeTodos = [{
+  text: ' Go to market',
+  isCompleted: true,
+}, {
+  text: 'Learn React',
+  isCompleted: false,
+}]
+function App(){
+
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    //fetch otomatik olarak get request atıyor
+    fetch('/todos')
+      .then(response => response.json())
+      .then(todos => setTodos(todos));
+      
+  }, []);
+
+
+
+    const createNewTodo = newTodoText => {
+      alert(' Creating new todo: ' + newTodoText)
+    }
+    const deleteTodo = todoText => {
+      alert('todo Deleted ' + todoText)
+    }
+    const completeTodo = todoText => {
+      alert('Completed ' + todoText)
+    }
+    return (
+      //öncelikle tüm appi router içinde compound ediyoruz
+      //route iki prop alıyor path ve component 
+      <Router>
+        <div className="App">
+        <Route path="/" component={HomePage} exact/>
+        <Route path="/todolist" component={ToDoList} exact/>
+        <NewTodoForm onClickCreate={createNewTodo} />
+        <ToDoList
+          todos={todos}
+          onCompleteTodo={completeTodo}
+          onDeleteTodo={deleteTodo} />
+
+       
+
+      </div>
+      </Router>
+      
+    );
+  }
+
 
 export default App;
