@@ -9,36 +9,59 @@ import { NewTodoForm } from './pages/NewTodoForm';
 import { ToDoListItem } from './pages/ToDoListItem';
 import './App.css';
 
-let fakeTodos = [{
+/* let fakeTodos = [{
   text: ' Go to market',
   isCompleted: true,
 }, {
   text: 'Learn React',
   isCompleted: false,
-}]
+}] */
+
 function App(){
 
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
     //fetch otomatik olarak get request atıyor
+    //commiting changes
     fetch('/todos')
       .then(response => response.json())
       .then(todos => setTodos(todos));
       
   }, []);
 
-
-
     const createNewTodo = newTodoText => {
-      alert(' Creating new todo: ' + newTodoText)
-    }
+      fetch('/todos', {
+        method: 'post',
+        body: JSON.stringify({newTodoText}),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })   
+        .then(response => response.json())
+        .then(updatedTodos => setTodos(updatedTodos));
+ }
     const deleteTodo = todoText => {
-      alert('todo Deleted ' + todoText)
+      fetch('/todos/delete', {
+        method: 'post',
+        body: JSON.stringify({text: todoText}),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })   
+        .then(response => response.json())
+        .then(updatedTodos => setTodos(updatedTodos));
     }
     const completeTodo = todoText => {
-      alert('Completed ' + todoText)
-    }
+      fetch('/todos/complete', {
+        method: 'post',
+        body: JSON.stringify({text:todoText}),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })   
+        .then(response => response.json())
+        .then(updatedTodos => setTodos(updatedTodos));    }
     return (
       //öncelikle tüm appi router içinde compound ediyoruz
       //route iki prop alıyor path ve component 
