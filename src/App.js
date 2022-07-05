@@ -1,87 +1,35 @@
-import React, {Component, useState, useEffect} from 'react';
-import { 
-  BrowserRouter as Router,
-  Route,
-} from 'react-router-dom';
-import HomePage  from './pages/HomePage';
-import { ToDoList } from './pages/ToDoList';
-import { NewTodoForm } from './pages/NewTodoForm';
-import { ToDoListItem } from './pages/ToDoListItem';
-import './App.css';
+import React, { Component, useState, useEffect } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import { ToDoList } from "./pages/ToDoList";
+import { NewTodoForm } from "./pages/NewTodoForm";
+import "./App.css";
+import { Container, Row, Col } from "reactstrap";
+import ArticleList from "./pages/ArticleList";
+import { getValue } from "@testing-library/user-event/dist/utils";
 
-/* let fakeTodos = [{
-  text: ' Go to market',
-  isCompleted: true,
-}, {
-  text: 'Learn React',
-  isCompleted: false,
-}] */
-
-function App(){
-
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    //fetch otomatik olarak get request atıyor
-    //commiting changes
-    fetch('/todos')
-      .then(response => response.json())
-      .then(todos => setTodos(todos));
-      
-  }, []);
-
-    const createNewTodo = newTodoText => {
-      fetch('/todos', {
-        method: 'post',
-        body: JSON.stringify({newTodoText}),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })   
-        .then(response => response.json())
-        .then(updatedTodos => setTodos(updatedTodos));
- }
-    const deleteTodo = todoText => {
-      fetch('/todos/delete', {
-        method: 'post',
-        body: JSON.stringify({text: todoText}),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })   
-        .then(response => response.json())
-        .then(updatedTodos => setTodos(updatedTodos));
-    }
-    const completeTodo = todoText => {
-      fetch('/todos/complete', {
-        method: 'post',
-        body: JSON.stringify({text:todoText}),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })   
-        .then(response => response.json())
-        .then(updatedTodos => setTodos(updatedTodos));    }
-    return (
-      //öncelikle tüm appi router içinde compound ediyoruz
-      //route iki prop alıyor path ve component 
-      <Router>
-        <div className="App">
-        <Route path="/" component={HomePage} exact/>
-        <Route path="/todolist" component={ToDoList} exact/>
-        <NewTodoForm onClickCreate={createNewTodo} />
-        <ToDoList
-          todos={todos}
-          onCompleteTodo={completeTodo}
-          onDeleteTodo={deleteTodo} />
-
-       
-
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <div>
+          <br></br>
+          <br></br>
+          <br></br>
+        </div>
+        <Container>
+          <Row>
+            <Col xs="3">
+              <NewTodoForm></NewTodoForm>
+            </Col>
+            <Col xs="9">
+              <ArticleList></ArticleList>
+            </Col>
+          </Row>
+        </Container>
+        <Route path="/" component={HomePage} exact />
       </div>
-      </Router>
-      
-    );
-  }
-
-
+    </Router>
+  );
+}
 export default App;
